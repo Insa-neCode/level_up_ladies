@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI für deinen Arbeitsalltag – Level up, Ladies!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0f;
+    --surface:#15151c;
+    --surface-2:#1c1c25;
+    --border:#2a2a34;
+    --text:#f2f1ee;
+    --text-dim:#a5a5b0;
+    --text-faint:#6c6c78;
+    --pink:#ff3d8a;
+    --coral:#ff7a45;
+    --mint:#7fe0b8;
+    --radius:10px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--pink); outline-offset:2px;}
+
+  .app{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    min-height:100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    padding:28px 20px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:-0.01em;
+    margin-bottom:4px;
+  }
+  .brand span{color:var(--pink);}
+  .brand-sub{
+    font-size:0.78rem;
+    color:var(--text-faint);
+    margin-bottom:28px;
+  }
+  .nav-group-label{
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--text-faint);
+    margin:22px 0 8px;
+    font-weight:600;
+  }
+  .nav-group-label:first-of-type{margin-top:0;}
+  .navlink{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-family:var(--font-body);
+    font-size:0.92rem;
+    padding:9px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .navlink:hover{background:var(--surface-2); color:var(--text);}
+  .navlink.active{background:var(--surface-2); color:var(--text); font-weight:600;}
+  .navlink .tag{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--text-faint);
+    min-width:22px;
+  }
+  .navlink.active .tag{color:var(--pink);}
+
+  .level-progress{
+    display:flex;
+    gap:6px;
+    margin-top:26px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+  .level-progress .dot{
+    flex:1;
+    height:3px;
+    border-radius:2px;
+    background:var(--border);
+  }
+  .level-progress .dot.done{background:var(--pink);}
+  .level-progress-label{
+    font-size:0.72rem;
+    color:var(--text-faint);
+    margin-top:8px;
+  }
+
+  /* MAIN */
+  .content{
+    padding:56px 64px 100px;
+    max-width:880px;
+  }
+  .page{display:none;}
+  .page.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--pink);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow .num{
+    font-family:var(--font-display);
+    font-size:1.4rem;
+    color:var(--text);
+    -webkit-text-stroke:1px var(--pink);
+    color:transparent;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-size:2.4rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    margin:0 0 18px;
+    line-height:1.1;
+  }
+  h2{
+    font-family:var(--font-display);
+    font-size:1.3rem;
+    font-weight:600;
+    margin:44px 0 14px;
+    letter-spacing:-0.01em;
+  }
+  h3{
+    font-family:var(--font-display);
+    font-size:1.05rem;
+    font-weight:600;
+    margin:28px 0 10px;
+  }
+  p{color:var(--text-dim); margin:0 0 14px; max-width:64ch;}
+  .lede{
+    font-size:1.05rem;
+    color:var(--text-dim);
+    max-width:60ch;
+    margin-bottom:8px;
+  }
+  .hint{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.85rem;
+    color:var(--text-faint);
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:8px 14px;
+    border-radius:8px;
+    margin:18px 0 8px;
+  }
+
+  /* START PAGE CARDS */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-top:32px;
+  }
+  .level-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .15s, transform .15s;
+    color:var(--text);
+    font-family:var(--font-body);
+  }
+  .level-card:hover{border-color:var(--pink); transform:translateY(-2px);}
+  .level-card .lc-num{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--pink);
+  }
+  .level-card h3{margin:0; font-size:1.05rem; color:var(--text);}
+  .level-card p{margin:0; font-size:0.88rem; color:var(--text-faint);}
+  .level-card .lc-time{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--text-faint);
+    margin-top:auto;
+    padding-top:10px;
+  }
+  .level-card.c3{border-color:transparent;}
+  .level-card.c3 .lc-num{color:var(--coral);}
+
+  /* STEPS */
+  .step{
+    display:grid;
+    grid-template-columns:32px 1fr;
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .step-num{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--text);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .step-body h4{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.98rem;
+    margin:4px 0 6px;
+  }
+  .step-body p{margin:0;}
+
+  /* CODE BLOCKS */
+  .codeblock{
+    position:relative;
+    background:#0e0e13;
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin:10px 0 4px;
+    overflow:hidden;
+  }
+  .codeblock.scrollable pre{
+    max-height:min(420px, 55vh);
+    overflow-y:auto;
+  }
+  .codeblock.scrollable::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:28px;
+    background:linear-gradient(to bottom, transparent, #0e0e13);
+    pointer-events:none;
+    border-radius:0 0 8px 8px;
+  }
+  .codeblock-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface-2);
+  }
+  .codeblock-label span{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--text-faint);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  .codeblock pre::-webkit-scrollbar{width:8px;}
+  .codeblock pre::-webkit-scrollbar-track{background:transparent;}
+  .codeblock pre::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
+  .codeblock pre::-webkit-scrollbar-thumb:hover{background:var(--pink);}
+  .codeblock pre{
+    margin:0;
+    padding:18px 100px 18px 18px;
+    font-family:var(--font-mono);
+    font-size:0.86rem;
+    color:#dcdce2;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .copy-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:var(--font-body);
+    font-size:0.76rem;
+    padding:6px 11px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .copy-btn:hover{background:var(--pink); color:#0b0b0f; border-color:var(--pink);}
+  .copy-btn.copied{background:var(--mint); color:#0b0b0f; border-color:var(--mint);}
+
+  /* CALLOUTS */
+  .callout{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:3px solid var(--pink);
+    border-radius:0 8px 8px 0;
+    padding:16px 18px;
+    margin:20px 0;
+  }
+  .callout.coral{border-left-color:var(--coral);}
+  .callout h4{
+    font-family:var(--font-body);
+    font-size:0.82rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--text-faint);
+    margin:0 0 8px;
+  }
+  .callout ul{margin:0; padding-left:18px; color:var(--text-dim);}
+  .callout li{margin-bottom:6px; font-size:0.92rem;}
+  .callout li:last-child{margin-bottom:0;}
+
+  /* CHECKLIST */
+  .checklist{list-style:none; padding:0; margin:16px 0;}
+  .checklist li{
+    display:flex;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:0.92rem;
+    color:var(--text-dim);
+  }
+  .checklist li:last-child{border-bottom:none;}
+  .checklist .mark{color:var(--mint); font-family:var(--font-mono); flex-shrink:0;}
+
+  /* TAB GROUP (Teil A/B/C) */
+  .subnav{
+    display:flex;
+    gap:4px;
+    margin:32px 0 4px;
+    border-bottom:1px solid var(--border);
+  }
+  .subnav button{
+    background:none;
+    border:none;
+    color:var(--text-faint);
+    font-family:var(--font-body);
+    font-size:0.88rem;
+    padding:10px 4px;
+    margin-right:22px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    transition:color .15s, border-color .15s;
+  }
+  .subnav button.active{color:var(--text); border-color:var(--pink);}
+  .subpanel{display:none;}
+  .subpanel.active{display:block; padding-top:20px;}
+
+  /* FAQ ACCORDION */
+  .faq-item{
+    border-bottom:1px solid var(--border);
+  }
+  .faq-q{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--text);
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.98rem;
+    padding:18px 0;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+  .faq-q .plus{
+    font-family:var(--font-mono);
+    color:var(--pink);
+    font-size:1.1rem;
+    flex-shrink:0;
+    transition:transform .2s;
+  }
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .faq-a p{padding-bottom:18px; margin:0;}
+  .faq-item.open .faq-a{max-height:300px;}
+
+  /* DOWNLOAD CARDS */
+  .dl-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px;
+    margin-bottom:16px;
+  }
+  .dl-card h3{margin-top:0;}
+  .dl-btn{
+    display:inline-block;
+    background:var(--pink);
+    color:#0b0b0f;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.9rem;
+    padding:10px 18px;
+    border-radius:8px;
+    text-decoration:none;
+    margin-top:10px;
+    border:none;
+    cursor:pointer;
+  }
+  .week-list{list-style:none; padding:0; margin:14px 0;}
+  .week-list li{
+    display:flex;
+    gap:10px;
+    align-items:baseline;
+    padding:8px 0;
+    font-size:0.9rem;
+    color:var(--text-dim);
+  }
+  .week-list .day{
+    font-family:var(--font-mono);
+    color:var(--text-faint);
+    font-size:0.78rem;
+    min-width:44px;
+  }
+
+  .page-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:56px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+  }
+  .page-nav button{
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:var(--font-body);
+    font-size:0.88rem;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .15s, color .15s;
+  }
+  .page-nav button:hover{border-color:var(--pink); color:var(--text);}
+
+  .hamburger{display:none;}
+
+  /* ADVANCED: info cards, framework grid, zutaten, baukasten */
+  .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:18px 0;}
+  .info-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 19px;}
+  .info-card .ic-num{font-family:var(--font-mono); font-size:0.72rem; color:var(--pink); display:block; margin-bottom:8px;}
+  .info-card .ic-icon{font-size:1.3rem; display:block; margin-bottom:8px; line-height:1;}
+  .info-card h4{margin:0 0 6px; font-family:var(--font-body); font-weight:600; font-size:0.94rem; color:var(--text);}
+  .info-card p{margin:0; font-size:0.84rem; color:var(--text-faint);}
+
+  .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin:18px 0;}
+  .fw-card{background:var(--surface); padding:20px 16px;}
+  .fw-card .fw-num{font-family:var(--font-mono); font-size:0.68rem; color:var(--text-faint); letter-spacing:0.05em;}
+  .fw-card h4{font-family:var(--font-display); font-size:0.95rem; margin:8px 0 6px; color:var(--pink); font-weight:600;}
+  .fw-card p{margin:0; font-size:0.8rem; color:var(--text-faint);}
+
+  .zutat-detail{border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; background:var(--surface); margin-bottom:10px;}
+  .zutat-detail summary{cursor:pointer; font-weight:600; font-size:0.92rem; color:var(--text); list-style:none; display:flex; align-items:center; gap:10px;}
+  .zutat-detail summary::-webkit-details-marker{display:none;}
+  .zutat-detail summary::before{content:"+"; font-family:var(--font-mono); color:var(--pink); font-size:1rem;}
+  .zutat-detail[open] summary::before{content:"–";}
+  .zutat-detail .zt-letter{font-family:var(--font-display); color:var(--pink); font-weight:700;}
+  .zutat-detail p{margin:10px 0 0; font-size:0.86rem; color:var(--text-faint);}
+  .zutat-detail pre{margin:10px 0 0; background:#0e0e13; border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-family:var(--font-mono); font-size:0.78rem; color:#dcdce2; white-space:pre-wrap;}
+
+  .bk-box{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin:22px 0;}
+  .bk-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; flex-wrap:wrap; gap:8px;}
+  .bk-head h4{margin:0; font-family:var(--font-display); font-weight:600; font-size:1rem;}
+  .bk-head span{font-size:0.76rem; color:var(--text-faint);}
+  .bk-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;}
+  .bk-field{display:flex; flex-direction:column; gap:6px;}
+  .bk-field label{font-size:0.78rem; font-weight:600; color:var(--text-dim);}
+  .bk-field select, .bk-field input[type="text"]{
+    font-family:var(--font-body); font-size:0.88rem; padding:10px 12px;
+    border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);
+  }
+  .bk-field select:focus, .bk-field input:focus{outline:2px solid var(--pink); outline-offset:1px;}
+  .bk-chips{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 16px;}
+  .bk-chip{
+    font-size:0.8rem; padding:7px 13px; border-radius:100px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text-dim); cursor:pointer; user-select:none; transition:all .15s;
+  }
+  .bk-chip.active{background:var(--pink); border-color:var(--pink); color:#0b0b0f;}
+  .bk-output{
+    background:#0e0e13; border:1px solid var(--border); border-radius:8px; padding:16px 18px;
+    font-family:var(--font-mono); font-size:0.8rem; color:#dcdce2; white-space:pre-wrap; min-height:56px;
+  }
+  .bk-actions{display:flex; justify-content:flex-end; margin-top:12px;}
+
+  .grid-2.cols-4{grid-template-columns:repeat(4, 1fr);}
+  @media (max-width: 860px){
+    .grid-2{grid-template-columns:1fr;}
+    .grid-4{grid-template-columns:1fr;}
+    .bk-grid{grid-template-columns:1fr;}
+    .grid-2.cols-4{grid-template-columns:repeat(2, 1fr);}
+  }
+  @media (max-width: 520px){
+    .grid-2.cols-4{grid-template-columns:1fr;}
+  }
+
+  @media (max-width: 860px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{
+      position:fixed;
+      inset:0 30% 0 0;
+      z-index:20;
+      transform:translateX(-100%);
+      transition:transform .2s ease;
+      box-shadow:0 0 40px rgba(0,0,0,.5);
+    }
+    .sidebar.open{transform:translateX(0);}
+    .hamburger{
+      display:flex;
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      padding:16px 20px;
+      align-items:center;
+      gap:12px;
+    }
+    .hamburger button{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      color:var(--text);
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:1rem;
+    }
+    .hamburger .h-title{font-family:var(--font-display); font-weight:600; font-size:0.95rem;}
+    .content{padding:32px 22px 80px;}
+    .card-grid{grid-template-columns:1fr;}
+    h1{font-size:1.8rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">Level up, <span>Ladies!</span></div>
+    <div class="brand-sub">KI-Power für Frauen im Bildungsbereich</div>
+
+    <div class="nav-group-label">Übersicht</div>
+    <button class="navlink" data-page="start"><span class="tag">＃</span> Start</button>
+
+    <div class="nav-group-label">Levels</div>
+    <button class="navlink" data-page="level1"><span class="tag">01</span> Setup</button>
+    <button class="navlink" data-page="level2"><span class="tag">02</span> Workflow</button>
+    <button class="navlink" data-page="level3"><span class="tag">03</span> Superpower</button>
+
+    <div class="nav-group-label">Weiteres</div>
+    <button class="navlink" data-page="faq"><span class="tag">?</span> FAQ</button>
+    <button class="navlink" data-page="downloads"><span class="tag">↓</span> Downloads</button>
+
+    <div class="level-progress">
+      <div class="dot" data-dot="1"></div>
+      <div class="dot" data-dot="2"></div>
+      <div class="dot" data-dot="3"></div>
+    </div>
+    <div class="level-progress-label" id="progress-label">Noch kein Level besucht</div>
+  </aside>
+
+  <div style="display:flex; flex-direction:column; width:100%;">
+
+    <div class="hamburger">
+      <button id="menuToggle" aria-label="Menü öffnen">☰</button>
+      <div class="h-title">Level up, Ladies!</div>
+    </div>
+
+    <main class="content">
+
+      <!-- START -->
+      <section class="page active" id="page-start">
+        <div class="eyebrow"><span class="num">#</span> Start</div>
+        <h1>KI für deinen Arbeitsalltag – Schritt für Schritt</h1>
+        <p class="lede">Diese Seite führt dich durch drei Levels: Dein Profil einrichten, deinen ersten Masterprompt bauen und Artefakte selbst erstellen. Jeder Schritt ist einzeln erklärt, mit den Prompts zum Kopieren.</p>
+
+        <div class="hint">Am besten öffnest du diese Seite in einem zweiten Tab neben Claude.</div>
+
+        <div class="card-grid">
+          <button class="level-card" data-page="level1">
+            <div class="lc-num">01 · Setup</div>
+            <h3>Claude kennt dich</h3>
+            <p>Persönliche Präferenzen einrichten.</p>
+            <div class="lc-time">ca. 20 Minuten</div>
+          </button>
+          <button class="level-card" data-page="level2">
+            <div class="lc-num">02 · Workflow</div>
+            <h3>Dein Masterprompt</h3>
+            <p>Ein Prompt für deine wiederkehrende Aufgabe.</p>
+            <div class="lc-time">ca. 25 Minuten</div>
+          </button>
+          <button class="level-card c3" data-page="level3">
+            <div class="lc-num">03 · Superpower</div>
+            <h3>Artefakte nutzen und selbst bauen</h3>
+            <p>Basic: Artefakte finden und nutzen. Advanced: eine eigene Lernwebseite bauen.</p>
+            <div class="lc-time">ca. 20–35 Minuten</div>
+          </button>
+        </div>
+
+        <h2>Wie du vorgehst</h2>
+        <p>Bearbeite die Levels in Reihenfolge. Level 1 ist Voraussetzung für Level 2. Level 3 baut inhaltlich nicht zwingend auf den anderen auf, ergibt aber im Anschluss am meisten Sinn.</p>
+      </section>
+
+      <!-- LEVEL 1 -->
+      <section class="page" id="page-level1">
+        <div class="eyebrow"><span class="num">01</span> Level 1 · Setup</div>
+        <h1>Persönliche Präferenzen einrichten</h1>
+        <p class="lede">Du hinterlegst einmal, wer du bist und wie du arbeitest. Ab dann berücksichtigt Claude das in jedem Chat, ohne dass du es erneut erklären musst.</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Claude öffnen</h4>
+            <p>Öffne einen neuen Chat auf claude.ai.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Fragebogen-Prompt kopieren</h4>
+            <p>Kopiere den folgenden Text vollständig und füge ihn in den Chat ein. Der Kasten lässt sich durchscrollen.</p>
+            <div class="codeblock scrollable">
+              <div class="codeblock-label">
+                <span>Fragebogen-Prompt · Setup-Assistent</span>
+                <button class="copy-btn" data-copy="prompt-fragebogen" style="position:static;">Kopieren</button>
+              </div>
+              <pre id="prompt-fragebogen">Du bist ein persönlicher Setup-Assistent für Claude AI, speziell für Lehrkräfte und andere Personen aus dem Bildungsbereich. Deine einzige Aufgabe: Den User durch ein geführtes Interview führen und am Ende fertige Persönliche Präferenzen liefern, die sofort unter Einstellungen → Profil eingefügt werden können.
+
+&lt;instructions&gt;
+
+## Data
+Persönliche Präferenzen stehen in Claude unter Einstellungen → Profil und wirken account-weit: in jedem Chat, in jedem Projekt, bei jeder Konversation. Sie decken vier Bereiche ab: Identität, Kommunikationsstil, Ziele, Vermeidungen. Deine Aufgabe ist es, die Rohantworten des Users in prägnante, umsetzbare Präferenz-Regeln zu übersetzen, nicht sie 1:1 zu übernehmen.
+
+Der User arbeitet im Bildungsbereich: als Lehrkraft, Referendar:in, Dozent:in, Ausbilder:in, Schulleitung oder in einer verwandten Rolle. Achte darauf, dass die Fragen und Beispiele zu diesem Feld passen.
+
+## Golden Example
+Ein exzellenter fertiger Text sieht in der Struktur genau so aus:
+---
+## Identität
+Ich bin Insa, Lehrerin für Mathematik, Informatik und GL an einer integrierten Gesamtschule in Nordrhein-Westfalen. Ich habe den Fachvorsitz Informatik. Ich gebe KI-Fortbildungen und Workshops für Lehrkräfte, sowohl intern im Kollegium als auch extern für Lehramtsanwärter. Außerdem erstelle ich Videoimpulse für eine Lehrerfortbildungsplattform. Ich nutze Claude vor allem für Elternmails, Nachrichten an Kolleg:innen, Posts auf unserer internen Plattform und die Vorbereitung von Unterricht und Fortbildungen.
+
+## Kommunikation
+Sprich mit mir wie mit einem smarten Freund beim Kaffee. Locker, aber professionell. Kurze Sätze. Verständliche Sprache ohne Fachbegriffe. Duze mich immer. Optimiere Rhythmus, Wortwahl und Lesefluss. Nutze eine aktive, motivierende Stimme. Gib aktiv Pushback, wenn meine Idee Schwächen hat, und geh mit mir ins Sparring, um sie gemeinsam zur besten Version zu machen. Wenn du dir im Kontext unsicher bist, frag nach. Zum Beispiel beim Schreiben von Nachrichten, Emails oder Briefen. Wenn ich "Entwurf" sage, meine ich einen ersten Vorschlag, den ich selbst noch überarbeite, kein fertiges Ergebnis. Passe die Sprache immer der Zielgruppe an. Besonders bei Material für Schüler muss die Sprache einfach und verständlich sein.
+
+## Ziele
+In den nächsten drei Monaten nehme ich pro Monat einen Videoworkshop auf und bereite eine größere Live-Fortbildung für Lehrkräfte vor. Danach plane ich den Start einer umfassenden Workshop-Reihe zu KI und Schule. Aktuell arbeite ich am Skript für meinen nächsten Videoimpuls-Workshop.
+
+## Vermeidungen
+Keine Gedankenstriche. Keine Buzzwords, Unternehmensjargon oder Floskeln. Keine generischen Einsätze wie "Natürlich, gerne" oder "Tolle Frage". Kein übermäßiges Loben meiner Ideen. Klinge nie nach einer Pressemitteilung. Keine erfundenen Informationen, Studien oder Zitate. Wenn du dir unsicher bist, sag es offen. Genauigkeit geht vor Geschwindigkeit. Nur geprüfte, aktuelle Infos. Belege wenn nötig mit richtiger, geprüfter Quelle.
+
+---
+
+Der finale Output hält sich exakt an dieses Muster: vier benannte Abschnitte, flüssige Sätze (keine Bullet-Listen innerhalb der Abschnitte), Ich-Perspektive für Identität und Ziele, direkte Du-Anweisung an Claude für Kommunikation und Vermeidungen. Gesamtlänge unter 500 Wörter.
+
+## Ablauf
+Du führst den User nacheinander durch die Bereiche 1 bis 4 mit insgesamt neun Fragen. Nach jeder einzelnen Frage machst du einen HARTEN STOPP und wartest auf die Antwort. Erst wenn der User geantwortet hat, bestätigst du mit maximal einem Satz ohne Lob und stellst die nächste Frage.
+
+Wenn eine Antwort zu dünn ist (unter zwei Sätzen oder ohne konkrete Details), hakst du genau einmal nach mit einer präzisen Folgefrage, die Beispiele enthält. Danach gehst du weiter, unabhängig davon, wie die Nachfrage beantwortet wird.
+
+Wenn dir ein Tool zur Verfügung steht, mit dem du anklickbare Antwortoptionen anzeigen kannst, nutze es für Fragen mit vorhersehbaren Antwortmustern, das betrifft 1b, 1c, 2a, 2b, 2c und 4b. Steht kein solches Tool zur Verfügung, präsentiere die Optionen stattdessen als nummerierte Liste, aus der der User wählen oder die er ergänzen kann.
+
+## Startanweisung
+Beginne sofort mit exakt dieser Einleitung, gefolgt von Frage 1a in derselben Nachricht:
+
+"In diesem Chat erarbeiten wir deine persönlichen Präferenzen, sie sind das Fundament deiner Claude-Nutzung. Sie gelten in jedem Chat und sorgen dafür, dass Claude dich und deinen Kontext von der ersten Nachricht an kennt, ohne dass du dieses jedes Mal aufs neue im Kontext erklären musst. Ich führe dich jetzt Schritt für Schritt durch, damit am Ende ein fertiger Text entsteht, den du direkt einfügen kannst."
+
+## Steps
+
+&lt;bereich_1_identitaet&gt;
+Frage 1a: "Was ist deine Rolle im Bildungsbereich, und wo arbeitest du? Nenne die Institution oder Schulform, dein Bundesland, dein Fach oder deine Fachbereiche, und für wen du hauptsächlich arbeitest. Zum Beispiel Schüler:innen einer bestimmten Stufe, Studierende, Kolleg:innen, Referendar:innen."
+→ HARTER STOPP
+
+Frage 1b: "Wie viel Erfahrung hast du in dieser Rolle, und hast du zusätzliche Funktionen? Wähle aus, was zutrifft, Mehrfachauswahl möglich, und ergänze gerne, was fehlt."
+Mögliche Optionen: Berufseinsteiger:in, Erfahrene Lehrkraft, Seminarleitung, Fachvorsitz, Zusatzaufgabe wie Digitalisierung oder Medienkonzept, Sonstiges
+Nutze ein Options-Tool mit Mehrfachauswahl, falls verfügbar, sonst eine nummerierte Liste zum Ankreuzen per Text. Erlaubt das Tool nur wenige Optionen, wähle die naheliegendsten für den bisherigen Kontext des Users und schließe immer mit einer offenen Ergänzungsmöglichkeit ab.
+→ HARTER STOPP
+
+Frage 1c: "In welchen Situationen nutzt du KI wie Claude in deinem Berufsalltag am häufigsten? Wähle aus, was zutrifft, und ergänze am Ende gerne alles, was hier fehlt."
+Mögliche Optionen: Mails an Eltern, LAA, Nachrichten an Kolleg:innen, Posts auf interner Plattform, Unterricht oder Seminarsitzungen vorbereiten, Feedback oder Bewertung von Schülertexten, Feedback oder Bewertungen von LAA, Material differenzieren, Klassenarbeiten, Klausuren oder Prüfungen erstellen, Zeugnisformulierungen oder Berichte schreiben, Protokolle oder Konferenzunterlagen vor- und nachbereiten, Fortbildungsmaterial oder Workshop-Folien entwickeln, Verwaltungsaufgaben wie Anträge oder Vermerke
+Steht ein Options-Tool zur Verfügung, das nur eine begrenzte Anzahl Optionen erlaubt, wähle daraus die naheliegendsten für den bisherigen Kontext des Users und schließe die Auswahl immer mit einer offenen Anschlussmöglichkeit ab, zum Beispiel einer letzten Option "Etwas anderes, das ich noch ergänzen möchte". Steht kein solches Tool zur Verfügung, liste die Optionen als Text auf und bitte den User, auszuwählen und zu ergänzen.
+→ HARTER STOPP
+&lt;/bereich_1_identitaet&gt;
+
+&lt;bereich_2_kommunikation&gt;
+Frage 2a: "Wie soll Claude mit dir sprechen? Wähle aus, was zutrifft, Mehrfachauswahl möglich, und ergänze gerne, was fehlt."
+Mögliche Optionen: Direkt, Diplomatisch, Kurz, Ausführlich, Sachlich, Mit Humor, Mit Emojis, Ohne Emojis
+Nutze ein Options-Tool mit Mehrfachauswahl, falls verfügbar, sonst eine nummerierte Liste zum Ankreuzen per Text.
+→ HARTER STOPP
+
+Frage 2b: "Was soll Claude NIEMALS tun oder sagen? Wähle aus, was zutrifft, Mehrfachauswahl möglich, und ergänze gerne, was fehlt."
+Mögliche Optionen: Bestimmte Floskeln verwenden, generische Einstiegssätze wie 'Natürlich, gerne', deine Ideen übermäßig loben, ungebetene Alternativvorschläge machen, Sonstiges
+Nutze ein Options-Tool mit Mehrfachauswahl, falls verfügbar, sonst eine nummerierte Liste zum Ankreuzen per Text.
+→ HARTER STOPP
+
+Frage 2c: "Soll Claude aktiv Pushback geben, wenn deine Idee schwach ist, oder einfach umsetzen, was du sagst? Pushback bedeutet: Claude widerspricht dir aktiv und weist von sich aus auf Schwächen in deiner Idee hin, auch ohne dass du danach fragst."
+Optionen: Aktiv Pushback geben, Einfach umsetzen, was ich sage
+Nutze ein Options-Tool mit Einfachauswahl, falls verfügbar, sonst frage per Text.
+→ HARTER STOPP
+&lt;/bereich_2_kommunikation&gt;
+
+&lt;bereich_3_ziele&gt;
+Frage 3: Formuliere diese Frage nicht generisch, sondern nimm kurz Bezug auf das, was der User in 1a bis 1c erzählt hat. Nutze etwa dieses Muster: "Du hast erzählt, dass du [Rolle und Kontext aus 1a/1b] bist und Claude vor allem für [Situationen aus 1c] nutzt. Woran arbeitest du gerade konkret, und gibt es wiederkehrende Aufgaben oder ein größeres Vorhaben für die kommenden Monate, bei denen dir Claude helfen soll? Zum Beispiel eine Zeugnisphase, Elternsprechtage, eine Klassenarbeitsphase, eine Fortbildungsreihe oder ein Unterrichtsprojekt." Passe die konkrete Formulierung an das an, was der User bisher gesagt hat, statt die Beispiele unverändert zu übernehmen.
+→ HARTER STOPP
+&lt;/bereich_3_ziele&gt;
+
+&lt;bereich_4_vermeidungen&gt;
+Frage 4a: "Was nervt dich am meisten an typischen KI-Antworten, das du nie wieder sehen willst? Denk an Formulierungen, Strukturen oder Verhaltensweisen."
+→ HARTER STOPP
+
+Frage 4b: Stelle unabhängig davon, wie ausführlich die Antwort auf 4a war, immer zusätzlich eine anklickbare Liste mit häufigen Vermeidungen zur Verfügung, aus der der User mehrere ankreuzen kann. Das ist wichtig, weil viele User nicht von allein auf jeden relevanten Punkt kommen. Nutze dafür ein Options-Tool, falls verfügbar, sonst eine nummerierte Liste zum Ankreuzen per Text.
+Liste: "Keine Floskeln wie 'Das ist eine großartige Frage' oder 'Natürlich, gerne'", "Kein übertriebenes Loben eigener Ideen", "Keine unnötig langen Antworten auf einfache Fragen", "Keine Bullet-Listen statt Fließtext", "Keine übervorsichtigen Formulierungen mit vielen Einschränkungen", "Keine ungebetenen Alternativvorschläge", "Keine erfundenen Informationen, Studien oder Zitate. Bei Unsicherheit soll Claude das offen sagen, nur geprüfte und aktuelle Infos nutzen und bei Bedarf mit echter Quelle belegen"
+Weise den letzten Punkt zur Genauigkeit explizit als Empfehlung aus, mit einem kurzen Hinweis, warum er im Bildungskontext fast immer sinnvoll ist, zum Beispiel weil Material für Schüler:innen, Kolleg:innen oder Eltern auf korrekten Informationen beruhen muss. Formuliere das so, dass auch ein User, der sich mit dem Thema noch nicht auskennt, versteht, worum es geht und wieso es empfohlen wird.
+→ HARTER STOPP
+&lt;/bereich_4_vermeidungen&gt;
+
+## Transformation
+Die Rohantworten des Users sind Input, nicht Output. Übersetze sie in prägnante, direkte Präferenz-Regeln. Beispiel:
+- Rohantwort: "Ich hasse es, wenn die KI ständig Sachen vorschlägt, die ich nicht wollte."
+- Übersetzte Regel: "Mache keine ungebetenen Alternativvorschläge."
+
+Die Antworten aus 1a, 1b und 1c fließen alle gemeinsam in den Absatz Identität ein, als ein flüssiger Text, nicht als Liste. Die Einsatzsituationen aus 1c werden dabei als ein Satz eingebaut, zum Beispiel: "Ich nutze Claude vor allem für [Situation 1], [Situation 2] und [Situation 3]."
+
+Die freie Antwort aus 4a und die angekreuzten Punkte aus 4b fließen gemeinsam in den Absatz Vermeidungen ein, als ein flüssiger Text, nicht als Liste. Wurde der Genauigkeits-Punkt aus 4b angekreuzt, wird er mit der Original-Formulierung aus dem Golden Example eingebaut: "Keine erfundenen Informationen, Studien oder Zitate. Wenn du dir unsicher bist, sag es offen. Genauigkeit geht vor Geschwindigkeit. Nur geprüfte, aktuelle Infos. Belege wenn nötig mit richtiger, geprüfter Quelle."
+
+## Selbstprüfung vor Ausgabe
+Bevor du den Codeblock ausgibst, prüfe still gegen diese Checkliste:
+1. Genau vier Abschnitte: Identität, Kommunikation, Ziele, Vermeidungen.
+2. Unter 500 Wörter insgesamt.
+3. Keine Ausrufezeichen. Keine Em-Dashes.
+4. Keine Platzhalter wie [dein Name] oder ähnliches.
+5. Identität und Ziele in Ich-Perspektive. Kommunikation und Vermeidungen als direkte Du-Anweisung an Claude.
+6. Keine Emojis, keine Bullet-Listen innerhalb der Abschnitte.
+7. Die Einsatzsituationen aus 1c sind als Satz in Identität eingearbeitet, nicht als eigener Abschnitt.
+8. Struktur und Tonalität orientieren sich am Golden Example oben.
+
+Wenn ein Punkt nicht erfüllt ist, korrigiere still vor der Ausgabe.
+
+## Ausgabe
+Nach bestandener Selbstprüfung lieferst du genau in dieser Reihenfolge:
+
+Zeile 1: "Hier sind deine fertigen Persönlichen Präferenzen. Einfach kopieren und unter Einstellungen → Profil einfügen."
+
+Danach ein Codeblock mit den Präferenzen im Format des Golden Example. Nach dem Codeblock kein weiterer Kommentar.
+
+## Disallowed Actions
+- Niemals zwei Fragen in einer Nachricht stellen.
+- Ersetze Lob-Floskeln wie "Tolle Antwort", "Super", "Spannend" durch sachliche Ein-Satz-Bestätigungen oder lass sie ganz weg.
+- Ersetze alle Ausrufezeichen durch Punkte.
+- Ersetze Em-Dashes durch Kommas oder trenne den Gedanken in zwei Sätze.
+- Führe den Prozess vollständig durch. Keine Abkürzungen, auch wenn Antworten kurz ausfallen.
+- Ergänze keine Informationen, die der User nicht genannt und auch nicht in einer Nachhak-Antwort gegeben hat.
+- Gib den Ergebnis-Codeblock erst aus, nachdem alle Fragen beantwortet und die Selbstprüfung abgeschlossen ist.
+
+## Consequences
+Der User kommt zu dir, weil er am Ende einen direkt kopierbaren Text braucht, der seine Arbeit mit Claude für Monate prägen wird. Ein mittelmäßiges Ergebnis hier bedeutet monatelang mittelmäßige Antworten in seinem Arbeitsalltag. Ein starkes Ergebnis, das dem Golden Example entspricht, verwandelt Claude in einen Assistenten, der ihn kennt und seine Arbeit im Schulalltag messbar beschleunigt.
+
+## Personality
+Du bist sachlich, direkt und ruhig. Kein Smalltalk, kein Cheerleading, keine Motivationssprüche. Du klingst wie ein professioneller Interviewer, der seinen Job ernst nimmt: freundlich, aber fokussiert. Deutsch, Du-Form, kurze Sätze, keine Fremdwörter.
+
+&lt;/instructions&gt;
+
+## Remember
+- Eine Frage pro Nachricht. Harter Stopp nach jeder Frage.
+- Bei dünnen Antworten (außer bei 4a) genau einmal nachhaken, dann weiter.
+- 1b, 1c, 2a, 2b und 4b mit anklickbaren Auswahloptionen stellen, wenn ein passendes Tool verfügbar ist, immer mit offener Ergänzungsmöglichkeit. 2c als Einfachauswahl.
+- Frage 2c: Erklärung von Pushback direkt vor die unveränderte Originalfrage stellen, beides in einer Nachricht.
+- Bereich 4 immer zweistufig: erst offene Frage 4a, danach immer zusätzlich eine ankreuzbare Liste 4b, inklusive der Genauigkeits-Klausel als empfohlenem Punkt.
+- Rohantworten in prägnante Regeln übersetzen, nicht 1:1 übernehmen.
+- Selbstprüfung gegen die acht Punkte vor jedem Output.
+- Codeblock im Format des Golden Example, unter 500 Wörter, direkt kopierbar.
+- Kein Lob, keine Floskeln, keine Ausrufezeichen, keine Em-Dashes.</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Fragen beantworten</h4>
+            <p>Claude stellt dir nacheinander neun Fragen. Beantworte sie konkret. Dauer: ca. 10 Minuten.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Ergebnis kopieren</h4>
+            <p>Nach der letzten Frage erstellt Claude einen Codeblock mit deinem fertigen Präferenz-Text. Kopiere den Text vollständig.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>In den Einstellungen einfügen</h4>
+            <p>Profilbild (unten links) → Einstellungen → Profil → Feld „Persönliche Präferenzen". Füge den Text dort ein.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Speichern</h4>
+            <p>Speichern. Ab jetzt berücksichtigt Claude diese Angaben in jedem Chat.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <h4>Pro Tipps</h4>
+          <ul>
+            <li>Du kannst diese Einstellung jederzeit anpassen und erweitern. Je mehr Claude über dich weiß, desto besser werden die Ergebnisse.</li>
+            <li>Formuliere die Präferenzen nicht zu spezifisch, wenn du mehrere Rollen hast.</li>
+            <li>Für Themen außerhalb deiner beruflichen Nutzung: Inkognito Chat verwenden. Dort gelten die Präferenzen nicht.</li>
+          </ul>
+        </div>
+
+        <div class="page-nav">
+          <button data-page="start">← Start</button>
+          <button data-page="level2">Weiter zu Level 2 →</button>
+        </div>
+      </section>
+
+      <!-- LEVEL 2 -->
+      <section class="page" id="page-level2">
+        <div class="eyebrow"><span class="num">02</span> Level 2 · Workflow</div>
+        <h1>Masterprompt für deine Aufgabe</h1>
+        <p class="lede">Ein Masterprompt legt fest, wie Claude bei einer wiederkehrenden Aufgabe vorgeht: welche Fragen er stellt, welchen Rahmen er einhält, was er liefert. Du baust ihn im Dialog mit Claude.</p>
+        <p>Wähle vorher eine konkrete Aufgabe, die du regelmäßig machst: Seminarsitzungen planen, Feedback auf Unterrichtsentwürfe schreiben, Fachleitungs-Gespräche vorbereiten.</p>
+
+        <div class="subnav">
+          <button class="subtab active" data-sub="l2a">Teil A · Erstellen</button>
+          <button class="subtab" data-sub="l2b">Teil B · Als Projekt</button>
+          <button class="subtab" data-sub="l2c">Teil C · Checkliste</button>
+        </div>
+
+        <div class="subpanel active" id="l2a">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Projekt öffnen</h4>
+              <p>Gehe zu „Projekte" und suche dort das Projekt „How to use Claude". Öffne es und starte darin einen neuen Chat.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Masterprompt kopieren und einfügen</h4>
+              <p>Kopiere den folgenden Text und füge ihn in den neuen Chat ein. Ersetze die Klammer durch deine Aufgabe.</p>
+              <div class="codeblock">
+                <button class="copy-btn" data-copy="prompt-master">Kopieren</button>
+                <pre id="prompt-master">Hilf mir einen Masterprompt für ein Projekt zu erstellen mit dem ich meine [DEINE AUFGABE] planen kann. Stelle mir so viele Fragen wie nötig um ein genaues Bild von meinem Projekt zu bekommen.</pre>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Fragen beantworten</h4>
+              <p>Claude fragt nach Details: Zielgruppe, gewünschtem Ergebnis, Rahmenbedingungen. Beantworte konkret. Dauer: ca. 15 Minuten.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Ergebnis prüfen</h4>
+              <p>Claude erstellt einen Masterprompt-Entwurf. Wenn etwas fehlt oder nicht passt: Gib direktes Feedback ("Ergänze …", "Das meine ich anders, nämlich …").</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="subpanel" id="l2b">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Neues Projekt erstellen</h4>
+              <p>claude.ai → „Projekte" → „Neues Projekt erstellen". Name z. B. „Seminarvorbereitung".</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Masterprompt einfügen</h4>
+              <p>Kopiere den fertigen Masterprompt in das Feld „Anweisungen". Speichern.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Projekt testen</h4>
+              <p>Öffne das Projekt. Schreib eine konkrete Anfrage, z. B. „Ich muss meine nächste Sitzung planen. [kurze Angaben]." Claude stellt jetzt die im Masterprompt festgelegten Fragen.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="subpanel" id="l2c">
+          <ul class="checklist">
+            <li><span class="mark">✓</span> Konkret formulieren: „Ich bereite wöchentlich Seminarsitzungen vor" statt „Ich mache Schulkram"</li>
+            <li><span class="mark">✓</span> Zielgruppe benennen: Lehramtsanwärter, Kollegium, Schüler</li>
+            <li><span class="mark">✓</span> Output definieren: Sitzungsplan, Foliensatz, Arbeitsblatt</li>
+            <li><span class="mark">✓</span> Rahmen klären: Vorgaben, Zeitbudget, Format</li>
+          </ul>
+        </div>
+
+        <div class="page-nav">
+          <button data-page="level1">← Level 1</button>
+          <button data-page="level3">Weiter zu Level 3 →</button>
+        </div>
+      </section>
+
+      <!-- LEVEL 3 -->
+      <section class="page" id="page-level3">
+        <div class="eyebrow"><span class="num">03</span> Level 3 · Superpower</div>
+        <h1>Artefakte – nutzen und selbst bauen</h1>
+        <p class="lede">Claude kann neben Text auch direkt HTML-Seiten, Arbeitsblätter und interaktive Tools erstellen. Diese werden als Artefakt angezeigt und lassen sich sofort nutzen, herunterladen oder weiterbearbeiten.</p>
+
+        <div class="callout coral">
+          <h4>Was ein Artefakt ist</h4>
+          <p style="margin:0; color:var(--text-dim); font-size:0.92rem;">Ein eigenständiges Ergebnis, das Claude parallel zum Chat erstellt: eine Webseite, ein Dokument, eine Grafik, ein interaktives Tool. Es öffnet sich in einem separaten Fenster und lässt sich direkt verwenden.</p>
+        </div>
+
+        <div class="subnav">
+          <button class="subtab active" data-sub="l3basic">Basic</button>
+          <button class="subtab" data-sub="l3advanced">Advanced</button>
+        </div>
+
+        <!-- ===== BASIC ===== -->
+        <div class="subpanel active" id="l3basic">
+
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Sidebar öffnen</h4>
+              <p>In der Seitenleiste von Claude findest du das Symbol „Artefakte". Dort landen alle Artefakte, die in deinen Chats entstanden sind.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Ein Artefakt erstellen</h4>
+              <p>Zwei Wege führen dazu: Über „Neues Artefakt erstellen" direkt in der Artefakte-Ansicht starten, oder im normalen Chat eine Aufgabe stellen – Claude erkennt selbst, wenn ein Artefakt sinnvoll ist, und erstellt es automatisch.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Format auswählen</h4>
+              <p>Beim Erstellen eines neuen Artefakts zeigt Claude sieben Kategorien zur Auswahl. Jede steht für eine andere Art von Ergebnis.</p>
+            </div>
+          </div>
+
+          <div class="grid-2 cols-4">
+            <div class="info-card">
+              <span class="ic-icon">🌐</span>
+              <h4>Apps und Webseiten</h4>
+              <p>Interaktive Seiten, Tools, kleine Anwendungen</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">📄</span>
+              <h4>Dokumente und Vorlagen</h4>
+              <p>Texte, Arbeitsblätter, Vorlagen zum Ausfüllen</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">🚩</span>
+              <h4>Spiele</h4>
+              <p>Kleine interaktive Lernspiele</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">⚡</span>
+              <h4>Produktivitätstools</h4>
+              <p>Rechner, Planer, kleine Helfer für den Alltag</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">🎨</span>
+              <h4>Kreative Projekte</h4>
+              <p>Freiere, gestalterische Ergebnisse</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">📋</span>
+              <h4>Quiz oder Umfrage</h4>
+              <p>Abfragen mit Auswertung oder Feedback</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-icon">＋</span>
+              <h4>Von Grund auf neu beginnen</h4>
+              <p>Ohne Vorlage, freie Beschreibung</p>
+            </div>
+          </div>
+
+          <div class="callout">
+            <h4>Aufgabe</h4>
+            <ul>
+              <li>Öffne in Claude die Artefakte-Ansicht und klicke auf „Neues Artefakt erstellen".</li>
+              <li>Wähle eine der sieben Kategorien oben aus, die zu einer Aufgabe aus deinem Alltag passt.</li>
+              <li>Beschreibe dein Vorhaben konkret und lass Claude ein erstes Ergebnis erstellen.</li>
+              <li>Sieh dir das Ergebnis an und gib direktes Feedback, wenn etwas nicht passt.</li>
+            </ul>
+          </div>
+
+          <h3>Anwendungsfälle</h3>
+          <ul class="checklist">
+            <li><span class="mark">→</span> Arbeitsblätter mit Aufgaben, Lückentexten oder Reflexionsfragen</li>
+            <li><span class="mark">→</span> Checklisten-Tools, interaktiv zum Abhaken</li>
+            <li><span class="mark">→</span> Lernwebseiten für ein einzelnes Thema, zum selbstständigen Durcharbeiten</li>
+            <li><span class="mark">→</span> Planungsvorlagen, Tabellen oder Raster für wiederkehrende Aufgaben</li>
+            <li><span class="mark">→</span> Kurze Quiz oder Selbsttests zur Wissensüberprüfung</li>
+          </ul>
+
+          <h3>Checkliste für einen guten Artefakt-Prompt</h3>
+          <ul class="checklist">
+            <li><span class="mark">✓</span> Aufgabe konkret benennen: Was soll entstehen, wofür wird es genutzt</li>
+            <li><span class="mark">✓</span> Format angeben: ausdruckbar, digital, interaktiv</li>
+            <li><span class="mark">✓</span> Zielgruppe benennen: Wer arbeitet damit</li>
+            <li><span class="mark">✓</span> Umfang begrenzen: ungefähre Länge oder Anzahl der Elemente</li>
+          </ul>
+
+          <div class="callout">
+            <h4>Pro Tipps</h4>
+            <ul>
+              <li>Ein Artefakt lässt sich nach der Erstellung beliebig oft überarbeiten, ohne dass der Kontext verloren geht.</li>
+              <li>Für wiederkehrende Artefakt-Aufgaben lohnt sich ein eigener Masterprompt, analog zu Level 2.</li>
+              <li>Nicht jede Aufgabe braucht ein Artefakt. Für reinen Text reicht der normale Chat.</li>
+            </ul>
+          </div>
+
+          <div class="hint">Weiter im Tab „Advanced": eine vollständige Lernwebseite selbst bauen.</div>
+        </div>
+
+        <!-- ===== ADVANCED ===== -->
+        <div class="subpanel" id="l3advanced">
+
+          <p>Im Basic-Teil hast du ein einzelnes Artefakt erstellt. Hier baust du eine vollständige, mehrteilige Lernwebseite: mit eigenem Aufbau, mehreren Abschnitten und einem wiederverwendbaren Prompt.</p>
+
+          <div class="bk-box">
+            <div class="bk-head">
+              <h4>Prompt-Baukasten</h4>
+              <span>baut dir einen startklaren Prompt</span>
+            </div>
+            <div class="bk-grid">
+              <div class="bk-field">
+                <label for="bk-typ">Was soll entstehen?</label>
+                <select id="bk-typ">
+                  <option value="Quiz">Interaktives Quiz</option>
+                  <option value="Zeitstrahl">Klickbarer Zeitstrahl</option>
+                  <option value="Glossar">Fach-Glossar zum Durchklicken</option>
+                  <option value="Escape Room">Escape Room fürs Klassenzimmer</option>
+                  <option value="Lernstationen">Lernstationen-Übersicht</option>
+                  <option value="Elternbrief">Elternbrief-Generator</option>
+                </select>
+              </div>
+              <div class="bk-field">
+                <label for="bk-thema">Für welches Fach oder Thema?</label>
+                <input type="text" id="bk-thema" placeholder="z. B. Rollenfindung, LAA 1. Jahr" value="Rollenfindung, LAA 1. Jahr">
+              </div>
+            </div>
+            <div class="bk-field" style="margin-bottom:6px;">
+              <label>Was ist dir wichtig? (mehrere möglich)</label>
+            </div>
+            <div class="bk-chips" id="bk-chips">
+              <div class="bk-chip active" data-chip="Barrierefreiheit">Barrierefreiheit</div>
+              <div class="bk-chip active" data-chip="Differenzierung (leicht/schwer)">Differenzierung</div>
+              <div class="bk-chip" data-chip="motivierender Ton für Erwachsene">Motivierender Ton</div>
+              <div class="bk-chip" data-chip="direktes Feedback bei Fehlern">Direktes Feedback</div>
+              <div class="bk-chip" data-chip="druckfreundliche Version">Druckfreundlich</div>
+            </div>
+            <div class="bk-output" id="bk-output"></div>
+            <div class="bk-actions">
+              <button class="copy-btn" data-copy="bk-output" style="position:static;">Prompt kopieren</button>
+            </div>
+          </div>
+
+          <h2>Warum selbst bauen</h2>
+          <p>Fertige Tools sind schnell, aber selten passgenau. Wenn du selbst baust, entscheidest du über Inhalt, Optik und Umfang – ohne Login, ohne Werbung, ohne unnötige Funktionen.</p>
+          <div class="grid-2">
+            <div class="info-card">
+              <span class="ic-num">01</span>
+              <h4>Quiz zum Wortschatz</h4>
+              <p>Selbstkorrigierend, mit Punktestand und Feedback am Ende.</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-num">02</span>
+              <h4>Interaktiver Zeitstrahl</h4>
+              <p>Ereignisse zum Anklicken, mit kurzen Erklärtexten.</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-num">03</span>
+              <h4>Elternbrief-Generator</h4>
+              <p>Formular, das aus wenigen Angaben einen fertigen Brief baut.</p>
+            </div>
+            <div class="info-card">
+              <span class="ic-num">04</span>
+              <h4>Fach-Glossar</h4>
+              <p>Begriffe eines Themas, durchsuchbar, mit Beispielen.</p>
+            </div>
+          </div>
+
+          <h2>Die Grundzutaten</h2>
+          <p>Jede Webseite besteht aus drei Schichten. Du musst sie nicht selbst schreiben können, aber wenn du weißt, was sie tun, sagst du der KI gezielter, was du willst.</p>
+
+          <details class="zutat-detail">
+            <summary><span class="zt-letter">H</span> Struktur (HTML) – legt fest, was auf der Seite vorkommt</summary>
+            <p>Überschrift, Text, Bild, Button. Das Skelett der Seite.</p>
+            <pre>&lt;h1&gt;Willkommen&lt;/h1&gt;
+&lt;p&gt;Das ist ein Text.&lt;/p&gt;
+&lt;button&gt;Weiter&lt;/button&gt;</pre>
+          </details>
+
+          <details class="zutat-detail">
+            <summary><span class="zt-letter">C</span> Stil (CSS) – legt fest, wie es aussieht</summary>
+            <p>Farben, Abstände, Schriftgröße, Layout.</p>
+            <pre>h1 {
+  color: #FF3D8A;
+  font-size: 32px;
+}</pre>
+          </details>
+
+          <details class="zutat-detail">
+            <summary><span class="zt-letter">J</span> Verhalten (JS) – legt fest, was bei Interaktion passiert</summary>
+            <p>Was passiert, wenn geklickt, getippt oder gewartet wird.</p>
+            <pre>button.onclick = function() {
+  alert("Richtig!");
+};</pre>
+          </details>
+
+          <h2>Mit KI bauen</h2>
+          <p>Vier Schritte, die bei jeder Aufgabe helfen, unabhängig davon, was gerade entsteht.</p>
+          <div class="grid-4">
+            <div class="fw-card">
+              <div class="fw-num">SCHRITT 1</div>
+              <h4>Entscheiden</h4>
+              <p>Was soll die Seite können? Für wen, mit welchem Ziel?</p>
+            </div>
+            <div class="fw-card">
+              <div class="fw-num">SCHRITT 2</div>
+              <h4>Erklären</h4>
+              <p>Prompt so konkret wie eine Arbeitsanweisung: Ziel, Zielgruppe, Ton, Umfang.</p>
+            </div>
+            <div class="fw-card">
+              <div class="fw-num">SCHRITT 3</div>
+              <h4>Prüfen</h4>
+              <p>Stimmen die Inhalte fachlich? Funktioniert es auf dem Zielgerät?</p>
+            </div>
+            <div class="fw-card">
+              <div class="fw-num">SCHRITT 4</div>
+              <h4>Verantworten</h4>
+              <p>Urheberrecht, Datenschutz, Angemessenheit bleiben deine Verantwortung.</p>
+            </div>
+          </div>
+
+          <h2>Schritt für Schritt: deine erste eigene Lernwebseite</h2>
+
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Idee festlegen</h4>
+              <p>Ein Satz reicht: „Ich will ein Quiz zu Gesprächsführung für LAA im ersten Jahr."</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Prompt schreiben</h4>
+              <p>Nutze den Baukasten oben oder schreib frei. Ein guter Prompt nennt Ziel, Zielgruppe und Rahmenbedingungen.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Ergebnis öffnen und ausprobieren</h4>
+              <p>Claude liefert ein Artefakt. Öffne es und klick dich einmal komplett durch, wie eine Nutzerin es tun würde.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Auf dem Endgerät testen</h4>
+              <p>Was am Laptop gut aussieht, kann auf dem Tablet anders wirken. Auf dem tatsächlich genutzten Gerät testen.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>Anpassen</h4>
+              <p>Nichts muss beim ersten Versuch passen. Konkret benennen, was fehlt oder stört.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+              <h4>Teilen</h4>
+              <p>Als Link, QR-Code oder Datei im Kursordner – so kommt die Seite bei der Zielgruppe an.</p>
+            </div>
+          </div>
+
+          <h2>Stolpersteine</h2>
+
+          <div class="faq-item">
+            <button class="faq-q">Die KI erfindet Fakten<span class="plus">+</span></button>
+            <div class="faq-a"><p>Jede fachliche Aussage selbst prüfen, bevor die Seite eingesetzt wird. Im Zweifel lieber eine Quelle weniger als eine falsche.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Sieht auf Handy oder Tablet komisch aus<span class="plus">+</span></button>
+            <div class="faq-a"><p>Explizit um eine responsive Version bitten und danach auf dem echten Gerät testen, nicht nur am eigenen Laptop.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Funktioniert nicht ohne Internet<span class="plus">+</span></button>
+            <div class="faq-a"><p>Bei unzuverlässiger Verbindung vorher offline testen. Einzelne HTML-Dateien laufen meist auch direkt aus dem Download-Ordner.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Datenschutz<span class="plus">+</span></button>
+            <div class="faq-a"><p>Keine echten Namen, Noten oder Fotos in einen Prompt eingeben. Mit Platzhaltern bauen, echte Daten erst lokal ergänzen.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Urheberrecht bei Bildern und Musik<span class="plus">+</span></button>
+            <div class="faq-a"><p>Nur eigene Fotos, KI-generierte Bilder oder frei lizenzierte Inhalte verwenden. Ein Bild aus der Google-Suche ist fast nie erlaubt.</p></div>
+          </div>
+
+          <h2>Vorlagen-Galerie</h2>
+          <p>Drei Grundgerüste zum Kopieren. So an Claude weitergeben und „bitte ausbauen zu …" ergänzen.</p>
+
+          <h3>Quiz-Grundgerüst</h3>
+          <div class="codeblock">
+            <button class="copy-btn" data-copy="tpl-quiz">Kopieren</button>
+            <pre id="tpl-quiz">&lt;div id="frage"&gt;
+  &lt;p&gt;Wie viel ist 3/4 + 1/4?&lt;/p&gt;
+  &lt;button onclick="check(true)"&gt;1&lt;/button&gt;
+  &lt;button onclick="check(false)"&gt;2&lt;/button&gt;
+&lt;/div&gt;
+&lt;p id="feedback"&gt;&lt;/p&gt;
+&lt;script&gt;
+function check(correct) {
+  document.getElementById("feedback").textContent =
+    correct ? "Richtig!" : "Leider nicht, versuch's nochmal.";
+}
+&lt;/script&gt;</pre>
+          </div>
+
+          <h3>Info-Seite-Grundgerüst</h3>
+          <div class="codeblock">
+            <button class="copy-btn" data-copy="tpl-info">Kopieren</button>
+            <pre id="tpl-info">&lt;h1&gt;Rollenfindung&lt;/h1&gt;
+&lt;p&gt;Der Übergang von Studierender zu Lehrkraft bedeutet …&lt;/p&gt;
+&lt;h2&gt;Wichtige Begriffe&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rollenklarheit&lt;/li&gt;
+  &lt;li&gt;Beziehungsgestaltung&lt;/li&gt;
+&lt;/ul&gt;</pre>
+          </div>
+
+          <h3>Interaktives Arbeitsblatt-Grundgerüst</h3>
+          <div class="codeblock">
+            <button class="copy-btn" data-copy="tpl-ab">Kopieren</button>
+            <pre id="tpl-ab">&lt;p&gt;Notiere: Was war diese Woche dein größter Lernmoment?&lt;/p&gt;
+&lt;textarea id="antwort" rows="4"&gt;&lt;/textarea&gt;
+&lt;button onclick="speichern()"&gt;Speichern&lt;/button&gt;
+&lt;p id="rueckmeldung"&gt;&lt;/p&gt;
+&lt;script&gt;
+function speichern() {
+  document.getElementById("rueckmeldung").textContent = "Notiert.";
+}
+&lt;/script&gt;</pre>
+          </div>
+
+        </div>
+
+        <div class="page-nav">
+          <button data-page="level2">← Level 2</button>
+          <button data-page="downloads">Weiter zu Downloads →</button>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="page" id="page-faq">
+        <div class="eyebrow"><span class="num">?</span> FAQ</div>
+        <h1>Häufige Fragen</h1>
+
+
+        <div class="faq-item">
+          <button class="faq-q">Claude gibt bei unterschiedlichen Anfragen ähnliche Antworten.<span class="plus">+</span></button>
+          <div class="faq-a"><p>Die Anfrage ist wahrscheinlich zu offen formuliert. Mehr Kontext liefert präzisere Ergebnisse. Statt „Ich muss eine Sitzung planen" besser: „Sitzung zu Differenzierung, Klasse 7, heterogene Lerngruppe, Output: Sitzungsplan und Foliensatz."</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Reicht das Profil, oder brauche ich ein Projekt?<span class="plus">+</span></button>
+          <div class="faq-a"><p>Für einmalige Aufgaben reicht das Profil (Level 1). Für wiederkehrende Aufgaben ist ein Projekt (Level 2) effizienter, da Claude den Kontext nicht jedes Mal neu abfragt.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Der Masterprompt funktioniert nicht wie gewünscht.<span class="plus">+</span></button>
+          <div class="faq-a"><p>Feedback geben: „Das hat nicht funktioniert, weil …" Der Prompt lässt sich im Projekt unter „Anweisungen" jederzeit bearbeiten.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Kann ich mehrere Projekte anlegen?<span class="plus">+</span></button>
+          <div class="faq-a"><p>Ja. Ein Projekt pro Aufgabe, z. B. „Seminarvorbereitung", „Fachleitungs-Gespräche", „Elternmails".</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Was ist der Inkognito Chat?<span class="plus">+</span></button>
+          <div class="faq-a"><p>Ein Chat-Modus ohne die hinterlegten Präferenzen. Sinnvoll für Themen, die nichts mit der beruflichen Nutzung zu tun haben.</p></div>
+        </div>
+
+        <div class="page-nav">
+          <button data-page="level3">← Level 3</button>
+          <button data-page="downloads">Weiter zu Downloads →</button>
+        </div>
+      </section>
+
+      <!-- DOWNLOADS -->
+      <section class="page" id="page-downloads">
+        <div class="eyebrow"><span class="num">↓</span> Downloads</div>
+        <h1>Materialien zum Mitnehmen</h1>
+
+        <div class="dl-card">
+          <h3>Handout (PDF)</h3>
+          <p>Alle Schritte aus Level 1 und Level 2, zum Ausdrucken oder digital. Enthält alle Prompts und eine Checkliste für die erste Woche.</p>
+          <button class="dl-btn">Handout herunterladen</button>
+        </div>
+
+        <div class="dl-card">
+          <h3>Checkliste</h3>
+          <ul class="week-list">
+            <li><span class="day">1</span> Profil einrichten oder überprüfen</li>
+            <li><span class="day">2</span> Masterprompt mit echter Aufgabe testen</li>
+            <li><span class="day">3</span> Masterprompt bei Bedarf anpassen</li>
+            <li><span class="day">4</span> Projekt für zwei reale Aufgaben nutzen</li>
+            <li><span class="day">5</span> Kurze Reflexion: was funktioniert, was nicht</li>
+          </ul>
+        </div>
+
+        <p style="margin-top:28px; font-size:0.88rem;">Fragen zu diesem Material: <strong style="color:var(--text);">insariese@gmail.com</strong></p>
+
+        <div class="page-nav">
+          <button data-page="start">← Zurück zum Start</button>
+          <span></span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const navlinks = document.querySelectorAll('.navlink');
+  const cardlinks = document.querySelectorAll('[data-page]');
+  const sidebar = document.getElementById('sidebar');
+  const menuToggle = document.getElementById('menuToggle');
+  const progressLabel = document.getElementById('progress-label');
+  const dots = document.querySelectorAll('.dot');
+  const visited = new Set();
+
+  const levelIndex = { level1:1, level2:2, level3:3 };
+
+  function showPage(id){
+    pages.forEach(p => p.classList.toggle('active', p.id === 'page-'+id));
+    navlinks.forEach(n => n.classList.toggle('active', n.dataset.page === id));
+    document.querySelector('.content').scrollTo({top:0, behavior:'instant'});
+    window.scrollTo({top:0, behavior:'instant'});
+    sidebar.classList.remove('open');
+
+    if(levelIndex[id]){
+      visited.add(levelIndex[id]);
+      dots.forEach(d => d.classList.toggle('done', visited.has(Number(d.dataset.dot))));
+      progressLabel.textContent = visited.size + ' von 3 Levels besucht';
+    }
+  }
+
+  cardlinks.forEach(el => {
+    el.addEventListener('click', () => showPage(el.dataset.page));
+  });
+
+  menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.copy;
+      const text = document.getElementById(targetId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Kopiert';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+      });
+    });
+  });
+
+  // Subtabs (Teil A/B/C)
+  document.querySelectorAll('.subtab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const group = tab.closest('section');
+      const target = tab.dataset.sub;
+      group.querySelectorAll('.subtab').forEach(t => t.classList.toggle('active', t === tab));
+      group.querySelectorAll('.subpanel').forEach(p => p.classList.toggle('active', p.id === target));
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+
+  // Prompt-Baukasten (Level 3 · Advanced)
+  const bkTypLabels = {
+    "Quiz": "ein interaktives Quiz",
+    "Zeitstrahl": "einen klickbaren Zeitstrahl",
+    "Glossar": "ein durchklickbares Fach-Glossar",
+    "Escape Room": "einen Escape Room",
+    "Lernstationen": "eine Lernstationen-Übersicht",
+    "Elternbrief": "einen Elternbrief-Generator"
+  };
+  const bkTyp = document.getElementById('bk-typ');
+  const bkThema = document.getElementById('bk-thema');
+  const bkChips = document.getElementById('bk-chips');
+  const bkOutput = document.getElementById('bk-output');
+
+  function buildBkPrompt(){
+    if(!bkTyp || !bkThema || !bkChips || !bkOutput) return;
+    const typText = bkTypLabels[bkTyp.value] || "eine interaktive Lernwebseite";
+    const thema = bkThema.value.trim() || "[dein Thema]";
+    const chips = Array.from(bkChips.querySelectorAll('.bk-chip.active')).map(c => c.dataset.chip);
+    const wichtig = chips.length ? chips.join(", ") : "eine klare, einfache Bedienung";
+    bkOutput.textContent = `Baue mir ${typText} (HTML, CSS und JavaScript in einer Datei) zum Thema "${thema}" für den Einsatz in meiner Ausbildungsarbeit.
+
+Wichtig ist mir: ${wichtig}.
+
+Halte die Sprache zielgruppengerecht für Erwachsene, die Bedienung einfach, auch auf Tablets.`;
+  }
+
+  if(document.getElementById('bk-chips')){
+    document.getElementById('bk-chips').addEventListener('click', (e) => {
+      const chip = e.target.closest('.bk-chip');
+      if(!chip) return;
+      chip.classList.toggle('active');
+      buildBkPrompt();
+    });
+    document.getElementById('bk-typ').addEventListener('change', buildBkPrompt);
+    document.getElementById('bk-thema').addEventListener('input', buildBkPrompt);
+    buildBkPrompt();
+  }
+</script>
+
+</body>
+</html>
