@@ -428,7 +428,7 @@
   .codeblock pre::-webkit-scrollbar-thumb:hover{background:var(--magenta);}
   .codeblock pre{
     margin:0;
-    padding:20px 100px 20px 20px;
+    padding:20px 122px 20px 20px;   /* rechts Platz fuer den Kopieren-Knopf */
     font-family:var(--font-mono);
     font-size:.84rem;
     line-height:1.65;
@@ -762,6 +762,14 @@
     color:#d9d8e2;
     white-space:pre-wrap;
   }
+  /* Prompt-Box behaelt ihr Aussehen, auch wenn sie in einem Aufklapper steht */
+  .zutat-detail .codeblock{margin:16px 0 6px;}
+  .zutat-detail .codeblock pre{
+    margin:0;
+    border:none;
+    padding:20px 132px 20px 20px;
+    font-size:.84rem;
+  }
 
   .bk-box{
     background:var(--surface);
@@ -992,6 +1000,7 @@
     .step-num{font-size:1.9rem;}
     .lede{font-size:1.15rem; padding-left:16px;}
     .codeblock pre{padding:20px 18px 62px;}
+    .zutat-detail .codeblock pre{padding:20px 18px 62px;}
     .copy-btn{top:auto; bottom:12px; right:12px;}
     .codeblock-label{flex-wrap:wrap;}
     .codeblock-label .copy-btn{position:static;}
@@ -1311,12 +1320,39 @@ Du bist sachlich, direkt und ruhig. Kein Smalltalk, kein Cheerleading, keine Mot
           <div class="step">
             <div class="step-num">1</div>
             <div class="step-body">
-              <h4>Projekt öffnen</h4>
-              <p>Gehe zu „Projekte" und suche dort das Projekt „How to use Claude". Öffne es und starte darin einen neuen Chat.</p>
+              <h4>Prüfen: Hast du das Projekt „How to use Claude"?</h4>
+              <p>Gehe zu „Projekte" und schau nach, ob dort ein Projekt „How to use Claude" liegt. Wenn ja: weiter mit Schritt 2. Wenn nicht: einmal aufklappen und anlegen. Das dauert ca. 5 Minuten und du machst es nur ein einziges Mal.</p>
+              <details class="zutat-detail">
+                <summary>Das Projekt fehlt bei mir – so legst du es an</summary>
+                <p><strong style="color:var(--text);">1. Projekt erstellen.</strong> claude.ai → „Projekte" → „Neues Projekt erstellen". Als Namen einsetzen: How to use Claude</p>
+                <p><strong style="color:var(--text);">2. Prompting Guide herunterladen.</strong> Das ist der Kontext für dein Projekt: der offizielle Leitfaden von Claude, wie man gute Prompts schreibt.</p>
+                <a href="claude-prompting-guide.md" download class="dl-btn">Prompting Guide herunterladen (MD)</a>
+                <p><strong style="color:var(--text);">3. Datei ins Projektwissen legen.</strong> Öffne dein neues Projekt. Rechts findest du „Projektwissen" → „Dateien hinzufügen" → die eben geladene Datei auswählen. Ab jetzt kennt Claude in diesem Projekt die Regeln für gute Prompts.</p>
+                <p><strong style="color:var(--text);">4. Anweisung hinterlegen.</strong> Wissen im Projekt heißt noch nicht, dass Claude es von allein anwendet. Sag ihm einmal, was er damit tun soll: im Projekt auf „Anweisungen", den folgenden Text einfügen, speichern.</p>
+                <div class="codeblock">
+                  <button class="copy-btn" data-copy="prompt-htuc">Kopieren</button>
+                  <pre id="prompt-htuc">Im Projektwissen liegt der offizielle Prompting Guide von Claude. Nutze ihn als Grundlage für jeden Prompt, den wir hier zusammen bauen.
+
+Wenn ich dich um einen Prompt oder Masterprompt bitte:
+
+1. Stelle mir zuerst Rückfragen, bis du Aufgabe, Zielgruppe, gewünschtes Ergebnis und Rahmenbedingungen kennst. Frag einzeln, nicht alles auf einmal.
+2. Baue den Prompt dann nach den Prinzipien aus dem Guide: klare Aufgabe zuerst, nötiger Kontext, bei Bedarf ein Beispiel, gewünschte Struktur der Antwort.
+3. Sag mir in zwei bis drei Sätzen, welche Prinzipien aus dem Guide du angewendet hast.
+
+Ich arbeite im Bildungsbereich. Duze mich und schreib in einfacher, klarer Sprache ohne Fachbegriffe.</pre>
+                </div>
+              </details>
             </div>
           </div>
           <div class="step">
             <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Projekt öffnen</h4>
+              <p>Öffne das Projekt „How to use Claude" und starte darin einen neuen Chat.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
             <div class="step-body">
               <h4>Masterprompt kopieren und einfügen</h4>
               <p>Kopiere den folgenden Text und füge ihn in den neuen Chat ein. Ersetze die Klammer durch deine Aufgabe.</p>
@@ -1327,14 +1363,14 @@ Du bist sachlich, direkt und ruhig. Kein Smalltalk, kein Cheerleading, keine Mot
             </div>
           </div>
           <div class="step">
-            <div class="step-num">3</div>
+            <div class="step-num">4</div>
             <div class="step-body">
               <h4>Fragen beantworten</h4>
               <p>Claude fragt nach Details: Zielgruppe, gewünschtem Ergebnis, Rahmenbedingungen. Beantworte konkret. Dauer: ca. 15 Minuten.</p>
             </div>
           </div>
           <div class="step">
-            <div class="step-num">4</div>
+            <div class="step-num">5</div>
             <div class="step-body">
               <h4>Ergebnis prüfen</h4>
               <p>Claude erstellt einen Masterprompt-Entwurf. Wenn etwas fehlt oder nicht passt: Gib direktes Feedback ("Ergänze …", "Das meine ich anders, nämlich …").</p>
@@ -1790,6 +1826,12 @@ function speichern() {
           <h3>Handout (PDF)</h3>
           <p>Alle Schritte aus Level 1 und Level 2, zum Ausdrucken oder digital. Enthält alle Prompts und eine Checkliste für die erste Woche.</p>
           <a href="handout-level-up-ladies_1.pdf" download class="dl-btn">Handout herunterladen</a>
+        </div>
+
+        <div class="dl-card">
+          <h3>Prompting Guide (MD)</h3>
+          <p>Der offizielle Leitfaden von Claude, wie man gute Prompts schreibt. Diese Datei gehört als Projektwissen in dein Projekt „How to use Claude" – die Anleitung dazu steht in Level 2, Teil A, Schritt 1.</p>
+          <a href="claude-prompting-guide.md" download class="dl-btn">Prompting Guide herunterladen</a>
         </div>
 
         <div class="dl-card">
