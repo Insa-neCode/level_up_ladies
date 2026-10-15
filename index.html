@@ -741,6 +741,15 @@
     line-height:1;
   }
   .zutat-detail[open] summary::before{content:"–";}
+
+  /* Aufgeklappter Kasten, der standardmaessig offen steht: Die Zeile zum
+     Zuklappen und die zum Wiederaufklappen wechseln sich ab. */
+  .zutat-detail .label-zu{display:inline;}
+  .zutat-detail .label-offen{display:none;}
+  .zutat-detail[open] .label-zu{display:none;}
+  .zutat-detail[open] .label-offen{display:inline;}
+  .zutat-detail.wichtig{border-color:var(--magenta); background:var(--surface-2);}
+  .zutat-detail.wichtig summary{color:var(--magenta-soft);}
   .zutat-detail .zt-letter{
     font-family:var(--font-display);
     font-style:italic;
@@ -1320,10 +1329,13 @@ Du bist sachlich, direkt und ruhig. Kein Smalltalk, kein Cheerleading, keine Mot
           <div class="step">
             <div class="step-num">1</div>
             <div class="step-body">
-              <h4>Prüfen: Hast du das Projekt „How to use Claude"?</h4>
-              <p>Gehe zu „Projekte" und schau nach, ob dort ein Projekt „How to use Claude" liegt. Wenn ja: weiter mit Schritt 2. Wenn nicht: einmal aufklappen und anlegen. Das dauert ca. 5 Minuten und du machst es nur ein einziges Mal.</p>
-              <details class="zutat-detail">
-                <summary>Das Projekt fehlt bei mir – so legst du es an</summary>
+              <h4>Das Projekt „How to use Claude" anlegen</h4>
+              <p>Bei fast allen neuen Konten gibt es dieses Projekt noch nicht. Dann legst du es jetzt an: ca. 5 Minuten, und du machst es nur ein einziges Mal. Danach steht es dir für alle weiteren Schritte zur Verfügung.</p>
+              <details class="zutat-detail wichtig" open>
+                <summary>
+                  <span class="label-offen">Bei mir gibt es „How to use Claude" als Projekt schon – Anleitung ausblenden</span>
+                  <span class="label-zu">Anleitung zum Anlegen wieder einblenden</span>
+                </summary>
                 <p><strong style="color:var(--text);">1. Projekt erstellen.</strong> claude.ai → „Projekte" → „Neues Projekt erstellen". Als Namen einsetzen: How to use Claude</p>
                 <p><strong style="color:var(--text);">2. Prompting Guide herunterladen.</strong> Das ist der Kontext für dein Projekt: der offizielle Leitfaden von Claude, wie man gute Prompts schreibt.</p>
                 <a href="claude-prompting-guide.md" download class="dl-btn">Prompting Guide herunterladen (MD)</a>
